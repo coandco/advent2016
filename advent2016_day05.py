@@ -1,7 +1,8 @@
 import hashlib
 from typing import List, Union, Tuple
+from utils import read_data
 
-INPUT = "ffykfhsq"
+INPUT = read_data()
 
 
 def check_hash(door: str, index: int) -> Union[None, Tuple[int, int]]:
