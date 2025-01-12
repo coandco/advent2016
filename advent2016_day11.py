@@ -33,11 +33,6 @@ class Floor(NamedTuple):
     def unpaired_chips(self):
         return frozenset(x.upper() for x in self.chips - self.generators)
 
-    @property
-    @cache
-    def unpaired_generators(self):
-        return frozenset()
-
     def valid(self) -> bool:
         return (not self.generators) or (not self.unpaired_chips)
 
@@ -93,7 +88,6 @@ class BuildingState(NamedTuple):
         return all(x.valid() for x in self.floors)
 
     def move_up(self, items: Tuple[str, ...]) -> Optional[Self]:
-        assert all(x in self.floors[self.elevator_floor].items for x in items), "Tried to move a nonexistent item!"
         if self.elevator_floor >= 3 or not self.floors[self.elevator_floor + 1].with_(items).valid():
             return None
         updated_floors = list(self.floors)
@@ -102,7 +96,6 @@ class BuildingState(NamedTuple):
         return BuildingState(elevator_floor=self.elevator_floor + 1, floors=tuple(updated_floors))
 
     def move_down(self, items: Tuple[str, ...]) -> Optional[Self]:
-        assert all(x in self.floors[self.elevator_floor].items for x in items), "Tried to move a nonexistent item!"
         if self.elevator_floor <= 0 or not self.floors[self.elevator_floor - 1].with_(items).valid():
             return None
         updated_floors = list(self.floors)
