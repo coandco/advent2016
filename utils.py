@@ -1,5 +1,5 @@
 from pathlib import Path
-from typing import NamedTuple, Iterator, Self
+from typing import NamedTuple, Iterator, Self, Type, Iterable, Tuple
 import inspect
 
 
@@ -63,6 +63,12 @@ class BaseCoord3D(NamedTuple):
 
     def __repr__(self) -> str:
         return f"Coord3D(x={self.x}, y={self.y}, z={self.z})"
+
+
+def read_grid[T: BaseCoord](raw: str, cls: Type[T] = BaseCoord) -> Iterable[Tuple[T, str]]:
+    for y, line in enumerate(raw.splitlines()):
+        for x, char in enumerate(line):
+            yield cls(x=x, y=y), char
 
 
 ALL_NEIGHBORS_2D = tuple(BaseCoord(x=x, y=y) for x in range(-1, 2) for y in range(-1, 2) if (x, y) != (0, 0))
